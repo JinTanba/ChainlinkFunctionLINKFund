@@ -1,9 +1,9 @@
-chainlinkFunctionsを使用するコントラクトの関数は、onlyOwnerである必要があった。関数の実行に必要なLINKは、登録者があらかじめsubscriptionに対して支払ったLINKが使用されるため、onlyOwnerを付与しない限り、LINKのフリーライダー問題に直面するためだ。
-ここでは、LINKの柔軟な支払いを可能にするための仕組みを提案する。つまり、Functionsの実行に必要なLINKを実行者から徴収するのだ。
+Functions in contracts using chainlinkFunctions needed to be onlyOwner. This is because the LINK required for function execution is paid from the LINK that the registrant has already paid to the subscription. Without onlyOwner, there would be a free-rider problem with LINK.
+Here, we propose a mechanism to enable flexible payment of LINK. In other words, we will collect the LINK necessary for executing Functions from the executor.
 
-1. LINKをSubscriptionに対して支払う方法
-LINKをsubscriptionに対して支払う方法は、以下の通りである。
-LINKのコントラクトに実装されたtransferAndCallを経由して、RouterコントラクトにLINKを送金する。
+1. Method of paying LINK to the Subscription
+The method of paying LINK to the subscription is as follows:
+Send LINK to the Router contract via transferAndCall implemented in the LINK contract.
 
 👇LINK(ERC677+ERC20)
 ```solidity
@@ -41,7 +41,7 @@ LINKのコントラクトに実装されたtransferAndCallを経由して、Rout
 ```
 
 
-2. 関数の実行前と、実行後にSubscriptionのLINK残高を確認し、差分をSubscriptionに送金する仕組みを導入すれば、実行に要したLINKを徴収することが可能である。
+2. By introducing a mechanism to check the LINK balance of the Subscription before and after function execution, and transfer the difference to the Subscription, it is possible to collect the LINK required for execution.
 ```solidity
     function send(uint256 amount, uint64 subId) external  {
         require(linkDeposit[msg.sender][subId] >= amount, "insufficient LINK");
@@ -51,4 +51,4 @@ LINKのコントラクトに実装されたtransferAndCallを経由して、Rout
 
 ```
 
-Base Sepolia: 0x6574670C5a7F831022160F94CeC26d6b4012b668
+Base Sepolia: 0xa530D009FaB25c716Dbb2d1186C71a23fcB1ca32
